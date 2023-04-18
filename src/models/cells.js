@@ -9,6 +9,9 @@ export const cell = sequelize.define("cells", {
     primaryKey: true,
     defaultValue: DataTypes.UUIDV4,
   },
+  date: {
+    type: DataTypes.DATE,
+  },
 });
 
 cell.hasMany(tasks, {

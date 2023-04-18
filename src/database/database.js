@@ -11,4 +11,5 @@ const database = process.env.DB_DATABASE || "calendardb";
 export const sequelize = new Sequelize(database, user, password, {
   host: "localhost",
   dialect: "mysql",
+  logging: false,
 });
