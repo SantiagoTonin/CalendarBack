@@ -1,4 +1,6 @@
 import { image } from "../models/imagen.js";
+import { bytesToKB } from "../helpers/converter.js";
+import fs from "fs";
 
 export const getImages = async (req, res, next) => {
   try {
@@ -17,9 +19,25 @@ export const getImage = async (req, res, next) => {
   }
 };
 export const createImages = async (req, res, next) => {
-  const prueba = req.body;
-  console.log(prueba);
+  try {
+    req.files.forEach((file) => {
+      const { originalname, mimetype, path, size } = file;
+      const resImage = image.create({
+        name: originalname,
+        path: path,
+        mime: mimetype,
+        imageSize: bytesToKB(size).toString() +"KB",
+        cellsId: req.body.cellsId
+      }); 
+
+    });
+    res.json({message:"Se subio correctamente la imagen"});
+
+  } catch (error) {
+    res.json({ error: error });
+  }
 };
+//posummuss
 export const upgradeImages = async (req, res, next) => {
   try {
     const { path, mime, imageSize } = req.body;
@@ -33,11 +51,22 @@ export const upgradeImages = async (req, res, next) => {
     res.status(500);
   }
 };
+
 export const deleteImages = async (req, res, next) => {
   try {
-    await image.destroy({ where: { imageId: req.params.id } });
+    await image.destroy({ where: { path: req.params.path } });
+    const rutaImagen = req.params.path
+    console.log(rutaImagen);
+    fs.unlink(rutaImagen, (error) => {
+      if (error) {
+        console.error(error);
+        res.status(500).send('Error al eliminar la imagen');
+      } else {
+        res.status(200).send('Imagen eliminada correctamente');
+      }
+    });
     res.status(200);
   } catch (error) {
-    res.status(500).json({ error: error});
+    res.status(500).json({ error: error,message:"La ruta enviada no es correcta"});
   }
 };

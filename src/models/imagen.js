@@ -8,6 +8,9 @@ export const image = sequelize.define("images",{
     primaryKey:true,
     defaultValue: DataTypes.UUIDV4,
   },
+  name:{
+    type: DataTypes.STRING,
+  },
   path:{
     type: DataTypes.STRING,
   },
@@ -15,6 +18,6 @@ export const image = sequelize.define("images",{
     type:DataTypes.STRING,
   },
   imageSize:{
-    type:DataTypes.INTEGER,
+    type:DataTypes.STRING,
   },
 })
