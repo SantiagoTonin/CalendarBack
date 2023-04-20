@@ -21,8 +21,13 @@ export const getTask = async (req, res) => {
 };
 export const createTask = async (req, res) => {
   try {
-    const { name, description } = req.body;
-    const result = await tasks.create(name, description);
+    console.log("llegue");
+    const { name, description, cellsId } = req.body;
+    const result = await tasks.create({
+      name: name,
+      description: description,
+      cellsId: cellsId,
+    });
     res.json(result);
   } catch (error) {
     res.status(500).json({ message: "No se pudo crear la tarea" });
