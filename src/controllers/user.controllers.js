@@ -1,5 +1,9 @@
-import { request } from "express";
 import { User } from "../models/user.js";
+import { picture } from "../models/picture.js";
+import { calendar } from "../models/calendar.js";
+import { cell } from "../models/cells.js";
+import { image } from "../models/imagen.js";
+import { tasks } from "../models/tasks.js";
 
 export const getUsers = async (req, res) => {
   try {
@@ -11,7 +15,7 @@ export const getUsers = async (req, res) => {
 };
 export const getUser = async (req, res) => {
   try {
-    const result = await User.findByPk(req.params.id );
+    const result = await User.findByPk(req.params.id);
     res.json(result);
   } catch (error) {
     res.status(500).json({ error: error });
@@ -38,7 +42,6 @@ export const upgrateUser = async (req, res) => {
   try {
     const { name, email, birthdate, nationality, age } = req.body;
     const result = await User.findByPk(req.params.id);
-    console.log(result);
     if (result === null) {
       throw new Error("El ID no existe.");
     }
@@ -50,7 +53,9 @@ export const upgrateUser = async (req, res) => {
     await result.save();
     res.json(result);
   } catch (error) {
-    res.status(500).json({ error: "Ha ocurrido un error al actualizar el usuario." });
+    res
+      .status(500)
+      .json({ error: "Ha ocurrido un error al actualizar el usuario." });
   }
 };
 export const deleteUser = async (req, res) => {
@@ -72,5 +77,32 @@ export const deleteUser = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });
+  }
+};
+
+export const apiComplete = async (req, res) => {
+  try {
+    const result = await User.findAll({
+      include: [
+        { model: picture },
+        {
+          model: calendar,
+          include: [
+            {
+              model: cell,
+              include: [
+                {
+                  model: image,
+                },
+                { model: tasks },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: "error interno", error: error.message });
   }
 };

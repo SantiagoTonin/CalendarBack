@@ -22,12 +22,14 @@ export const createImages = async (req, res, next) => {
   try {
     req.files.forEach((file) => {
       const { originalname, mimetype, path, size } = file;
+      const {cellsId} = req.body;
+      console.log(cellsId);
       const resImage = image.create({
         name: originalname,
         path: path,
         mime: mimetype,
         imageSize: formatBytes(size),
-        cellsId: req.body.cellsId
+        cellsId: cellsId
       }); 
 
     });

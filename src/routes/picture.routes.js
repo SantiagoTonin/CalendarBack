@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { upload } from "../middleware/picture.middleware.js";
+import { deleteImage } from "../middleware/errorImageDelete.middleware.js";
 import {
   getPictures,
   getPicture,
@@ -11,7 +12,7 @@ import {
 const route = Router();
 
 route.get("/picture",getPictures);
-route.post("/picture",upload,createPicture);
+route.post("/picture",upload,deleteImage,createPicture);
 route.get("/picture/:id",getPicture);
 route.put("/picture/:id",upgratePicture);
 route.delete("/picture/:path",DeletePictures);
