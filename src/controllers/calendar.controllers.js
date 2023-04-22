@@ -33,11 +33,12 @@ export const getCalendar = async (req, res) => {
 
 export const createCalendar = async (req, res) => {
   try {
-    const { description, info } = req.body;
+    const { description, info, userId } = req.body;
 
     const newCalendar = await calendar.create({
       description: description,
       info: info,
+      userId: userId,
     });
     res.json(newCalendar);
   } catch (error) {
@@ -96,9 +97,10 @@ export const allInfoCalendars = async (req, res) => {
           include: [
             {
               model: image,
-            },{
-              model:tasks
-            }
+            },
+            {
+              model: tasks,
+            },
           ],
         },
       ],

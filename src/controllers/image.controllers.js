@@ -1,5 +1,5 @@
 import { image } from "../models/imagen.js";
-import { bytesToKB } from "../helpers/converter.js";
+import { formatBytes } from "../helpers/converter.js";
 import fs from "fs";
 
 export const getImages = async (req, res, next) => {
@@ -26,7 +26,7 @@ export const createImages = async (req, res, next) => {
         name: originalname,
         path: path,
         mime: mimetype,
-        imageSize: bytesToKB(size).toString() +"KB",
+        imageSize: formatBytes(size),
         cellsId: req.body.cellsId
       }); 
 
