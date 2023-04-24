@@ -15,22 +15,29 @@ export const cell = sequelize.define("cells", {
 });
 
 cell.hasMany(tasks, {
-  foreignKey: "cellsId",
+  foreignKey: {
+    name: "cellsId",
+    allowNull: false,
+  },
   sourceKey: "cellsId",
 });
 
 tasks.belongsTo(cell, {
-  foreignKey: "cellsId",
+  foreignKey: {name:"cellsId",allowNull: false,validate:{notNull:{msg: "El userId no puede ser null"}}},
   targetKey: "cellsId",
+
 });
 
 cell.hasMany(image, {
-  foreignKey: "cellsId",
+  foreignKey: {
+    name: "cellsId",
+    allowNull: false,
+  },
   sourceKey: "cellsId",
 });
 
 image.belongsTo(cell, {
-  foreignKey: "cellsId",
+  foreignKey: {name:"cellsId",allowNull: false,validate:{notNull:{msg: "El userId no puede ser null"}}},
   targetKey: "cellsId",
 });
 

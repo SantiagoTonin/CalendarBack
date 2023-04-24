@@ -36,13 +36,13 @@ export const createCalendar = async (req, res) => {
     const { description, info, userId } = req.body;
 
     const newCalendar = await calendar.create({
-      description: description,
-      info: info,
+      description: description || "",
+      info: info || "",
       userId: userId,
     });
     res.json(newCalendar);
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({mesagge:"El calendario no pudo ser creado", error: error.message});
   }
 };
 

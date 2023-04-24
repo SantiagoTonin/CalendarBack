@@ -15,11 +15,8 @@ export const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        esAlfanumerico: function(value) {
-          if (!/^[a-zA-Z0-9]+$/.test(value)) {
-            throw new Error('El nombre solo puede contener letras y números.');
-          }
-        },
+        isAlpha: { msg: "El nombre solo puede contener letras" },
+        notNull: { msg: "el nombre no puede ser nulo" },
       },
     },
     birthdate: {
@@ -28,38 +25,53 @@ export const User = sequelize.define(
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: {
+        msg: "El email ya se encuentra registrado en la Base de datos",
+      },
+      validate: {
+        isEmail: { msg: "No es un Email valido" },
+        notNull: { msg: "el email no puede ser nulo" },
+      },
     },
     nationality: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        isAlpha: { msg: "El nombre solo puede contener letras" },
+        notNull: { msg: "el nationality no puede ser nulo" },
+      },
     },
     age: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+        isNumeric: true,
+        notNull: { msg: "La edad no puede ser nulo" },
+      },
     },
     rol: {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: "USUARIO",
     },
-    
-},
+  },
   {
     timestamps: false,
   }
 );
 
-User.hasOne(calendar,{
-  foreignKey: "userId",
+User.hasOne(calendar, {
+  foreignKey: { name: "userId", allowNull: false },
   sourceKey: "userId",
 });
 
 calendar.belongsTo(User, {
-  foreignKey: "userId",
+  foreignKey: {name:"userId",allowNull: false,validate:{notNull:{msg: "El userId no puede ser null"}}},
+  targetKey: "userId",
 });
 
 User.hasMany(picture, {
-  foreignKey:{
+  foreignKey: {
     name: "userId",
     allowNull: false,
   },
@@ -67,9 +79,6 @@ User.hasMany(picture, {
 });
 
 picture.belongsTo(User, {
-  foreignKey:{
-    name: "userId",
-    allowNull: false,
-  },
+  foreignKey: {name:"userId",allowNull: false,validate:{notNull:{msg: "El userId no puede ser null"}}},
   targetKey: "userId",
 });

@@ -34,8 +34,8 @@ export const createUser = async (req, res) => {
     res.status(201).json(newUser);
   } catch (error) {
     res
-      .status(500)
-      .json({ message: "no se pudo crear al usuario", error: error });
+      .status(400)
+      .json({ message: "no se pudo crear al usuario", error: error.errors[0].message });
   }
 };
 export const upgrateUser = async (req, res) => {
@@ -54,8 +54,8 @@ export const upgrateUser = async (req, res) => {
     res.json(result);
   } catch (error) {
     res
-      .status(500)
-      .json({ error: "Ha ocurrido un error al actualizar el usuario." });
+    .status(400)
+    .json({ message: "El usuario no se pudo actualizar", error: error.errors[0].message });
   }
 };
 export const deleteUser = async (req, res) => {

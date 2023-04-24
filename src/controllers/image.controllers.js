@@ -39,7 +39,7 @@ export const createImages = async (req, res, next) => {
     res.json({ error: error });
   }
 };
-//posummuss
+
 export const upgradeImages = async (req, res, next) => {
   try {
     const { path, mime, imageSize } = req.body;

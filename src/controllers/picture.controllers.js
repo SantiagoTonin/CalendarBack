@@ -33,9 +33,9 @@ export const createPicture = async (req, res) => {
       userId: userId,
     });
 
-    res.status(201).json({ message: "La imagen se subio correctamente" });
+    res.status(200).json({ message: "La imagen se subio correctamente" });
   } catch (error) {
-    res.status(500).json({
+    res.status(400).json({
       message: "Imagen rechazada",
       error: error.message,
     });
