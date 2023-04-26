@@ -21,10 +21,7 @@ export const createPicture = async (req, res) => {
   try {
     const { originalname, mimetype, path, size } = req.file;
     const { userId } = req.body;
-    console.log(userId);
-    if (!userId) {
-      throw new Error("el user Id no puede ser null");
-    }
+
     const resImage = picture.create({
       name: originalname,
       path: path,

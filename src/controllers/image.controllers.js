@@ -2,6 +2,10 @@ import { image } from "../models/imagen.js";
 import { formatBytes } from "../helpers/converter.js";
 import fs from "fs";
 
+
+
+
+
 export const getImages = async (req, res, next) => {
   try {
     const results = await image.findAll();
@@ -23,7 +27,6 @@ export const createImages = async (req, res, next) => {
     req.files.forEach((file) => {
       const { originalname, mimetype, path, size } = file;
       const {cellsId} = req.body;
-      console.log(cellsId);
       const resImage = image.create({
         name: originalname,
         path: path,
@@ -42,17 +45,21 @@ export const createImages = async (req, res, next) => {
 
 export const upgradeImages = async (req, res, next) => {
   try {
-    const { path, mime, imageSize } = req.body;
-    const results = await image.findByPk(req.params.id);
-    results.path = path;
-    results.mime = mime;
-    results.imageSize = imageSize;
-    results.save();
-    res.json(results);
+    for (const file of req.files) {
+      const { path, mime, imageSize } = file;
+      const imageToUpdate = await image.findByPk(req.params.id);
+      imageToUpdate.path = path;
+      imageToUpdate.mime = mime;
+      imageToUpdate.imageSize = imageSize;
+      await imageToUpdate.save();
+    }
+
+    res.status(200).json("se actualizo correctamente");
   } catch (error) {
-    res.status(500);
+    res.status(500).json({ error: error.message });
   }
 };
+
 
 export const deleteImages = async (req, res, next) => {
   try {

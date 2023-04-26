@@ -4,6 +4,8 @@ import { calendar } from "../models/calendar.js";
 import { cell } from "../models/cells.js";
 import { image } from "../models/imagen.js";
 import { tasks } from "../models/tasks.js";
+import { hashPassword,comparePassword } from "../helpers/passwordUtils.js";
+import jwt from "jsonwebtoken";
 
 export const getUsers = async (req, res) => {
   try {
@@ -23,19 +25,40 @@ export const getUser = async (req, res) => {
 };
 export const createUser = async (req, res) => {
   try {
-    const { name, email, birthdate, nationality, age } = req.body;
+    const { name, email, password, birthdate, nationality, age } = req.body;
+    const encrypted = await hashPassword(password);
     const newUser = await User.create({
       name: name,
       email: email,
+      password: encrypted,
       birthdate: birthdate,
       nationality: nationality,
       age: age,
     });
-    res.status(201).json(newUser);
+    const token = jwt.sign({ user: newUser }, "secret", { expiresIn: "7d" }); // "secret" es para codificar el token mejor usar .env para el parametro
+    res.status(201).json({ newUser, token });
   } catch (error) {
     res
       .status(400)
-      .json({ message: "no se pudo crear al usuario", error: error.errors[0].message });
+      .json({ message: "no se pudo crear al usuario", error: error.message });
+  }
+};
+export const singIn = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const resultUser = await User.findOne({ where: { email: email } });
+    if (!resultUser) {
+      res.status(404).json({ message:"Usuario con este correo no encontrado"})
+    }else{
+      if (comparePassword(password, resultUser.password)) {
+        const token = jwt.sign({ user: resultUser }, "secret", { expiresIn: "7d" }); // "secret" es para codificar el token mejor usar .env para el parametro
+        res.status(200).json({ resultUser, token });
+      }else{
+        res.status(400).json({ message:"contraseña incorrecta"})
+      }
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 export const upgrateUser = async (req, res) => {
@@ -53,9 +76,10 @@ export const upgrateUser = async (req, res) => {
     await result.save();
     res.json(result);
   } catch (error) {
-    res
-    .status(400)
-    .json({ message: "El usuario no se pudo actualizar", error: error.errors[0].message });
+    res.status(400).json({
+      message: "El usuario no se pudo actualizar",
+      error: error.errors[0].message,
+    });
   }
 };
 export const deleteUser = async (req, res) => {

@@ -8,7 +8,7 @@ const route = Router();
 route.get("/image",getImages)
 route.post("/image",upload.array("images",3),deleteImage,createImages)
 route.get("/image/:id",getImage)
-route.put("/image/:id",upgradeImages)
+route.put("/image/:id",upload.array("images",3),upgradeImages)
 route.delete("/image/:path",deleteImages)
 
 export default route;

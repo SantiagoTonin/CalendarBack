@@ -1,6 +1,7 @@
 import fs from 'fs';
 
 
+
 export const deleteImage = (req, res, next) => {
   res.on("finish", () => { 
     if (res.statusCode >= 400) { 

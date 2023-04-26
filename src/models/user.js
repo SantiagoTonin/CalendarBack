@@ -19,9 +19,6 @@ export const User = sequelize.define(
         notNull: { msg: "el nombre no puede ser nulo" },
       },
     },
-    birthdate: {
-      type: DataTypes.STRING,
-    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -33,13 +30,12 @@ export const User = sequelize.define(
         notNull: { msg: "el email no puede ser nulo" },
       },
     },
-    nationality: {
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        isAlpha: { msg: "El nombre solo puede contener letras" },
-        notNull: { msg: "el nationality no puede ser nulo" },
-      },
+    },
+    birthdate: {
+      type: DataTypes.STRING,
     },
     age: {
       type: DataTypes.INTEGER,
@@ -47,6 +43,14 @@ export const User = sequelize.define(
       validate: {
         isNumeric: true,
         notNull: { msg: "La edad no puede ser nulo" },
+      },
+    },
+    nationality: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isAlpha: { msg: "El nombre solo puede contener letras" },
+        notNull: { msg: "el nationality no puede ser nulo" },
       },
     },
     rol: {

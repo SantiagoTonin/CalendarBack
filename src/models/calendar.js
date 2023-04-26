@@ -41,11 +41,14 @@ export const calendar = sequelize.define(
 );
 
 calendar.hasMany(cell, {
-  foreignKey: "calendarId",
+  foreignKey: {
+    name: "calendarId",
+    allowNull: false,
+  }, 
   sourceKey: "calendarId",
 });
 
 cell.belongsTo(calendar, {
-  foreignKey: "calendarId",
+  foreignKey: {name:"calendarId",allowNull: false,validate:{notNull:{msg: "El userId no puede ser null"}}},
   targetKey: "calendarId",
 });
