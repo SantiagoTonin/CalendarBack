@@ -4,8 +4,9 @@ import { calendar } from "../models/calendar.js";
 import { cell } from "../models/cells.js";
 import { image } from "../models/imagen.js";
 import { tasks } from "../models/tasks.js";
+import { generateToken } from "../helpers/generateToken.js";
 import { hashPassword,comparePassword } from "../helpers/passwordUtils.js";
-import jwt from "jsonwebtoken";
+
 
 export const getUsers = async (req, res) => {
   try {
@@ -35,8 +36,8 @@ export const createUser = async (req, res) => {
       nationality: nationality,
       age: age,
     });
-    const token = jwt.sign({ user: newUser }, "secret", { expiresIn: "7d" }); // "secret" es para codificar el token mejor usar .env para el parametro
-    res.status(201).json({ newUser, token });
+    const token = await generateToken(newUser);
+    res.status(201).json({ newUser: newUser, token: token });
   } catch (error) {
     res
       .status(400)
@@ -51,7 +52,7 @@ export const singIn = async (req, res) => {
       res.status(404).json({ message:"Usuario con este correo no encontrado"})
     }else{
       if (comparePassword(password, resultUser.password)) {
-        const token = jwt.sign({ user: resultUser }, "secret", { expiresIn: "7d" }); // "secret" es para codificar el token mejor usar .env para el parametro
+        const token = await generateToken(resultUser); 
         res.status(200).json({ resultUser, token });
       }else{
         res.status(400).json({ message:"contraseña incorrecta"})

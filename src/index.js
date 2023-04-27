@@ -1,6 +1,11 @@
 import app from "./app.js";
 import { sequelize } from "./database/database.js";
 import { clean } from "./lib/imageCleaner.js";
+import {config} from "dotenv";
+
+
+
+
 
 
 
@@ -13,6 +18,7 @@ try {
   console.error("Unable to connect to the database:", error);
 }}
 
+config()
 // clean(true); //funcion para limpiar la carpeta de imagenes no registradas en la base de datos
 main();
 
