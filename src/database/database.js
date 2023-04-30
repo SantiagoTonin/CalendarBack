@@ -4,7 +4,7 @@ import {config} from "dotenv";
 config()
 
 const user = process.env.DB_USER || "root";
-const password = process.env.DB_PASS || "root";
+const password = process.env.DB_PASSWORD || "root";
 const database = process.env.DB_DATABASE || "calendardb";
 
 
