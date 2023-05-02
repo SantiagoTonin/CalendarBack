@@ -13,12 +13,12 @@ import { authRoleAuthorized } from "../middleware/roleAuth.middleware.js";
 
 const routes = Router();
 
-routes.get("/user/api",apiComplete);
+routes.get("/user/api",authRoleAuthorized,apiComplete);
 routes.get("/user",authRoleAuthorized,getUsers);
 routes.post("/singup",createUser);
 routes.post("/singin",singIn)
-routes.get("/user/:id",getUser);
-routes.put("/user/:id",upgrateUser);
-routes.delete("/user/:id",deleteUser);
+routes.get("/user/:id",checkAuth,getUser);
+routes.put("/user/:id",checkAuth,upgrateUser);
+routes.delete("/user/:id",checkAuth,deleteUser);
 
 export default routes;
