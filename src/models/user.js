@@ -19,6 +19,14 @@ export const User = sequelize.define(
         notNull: { msg: "el nombre no puede ser nulo" },
       },
     },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isAlpha: { msg: "El apellido solo puede contener letras" },
+        notNull: { msg: "el apellido no puede ser nulo" },
+      },
+    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,

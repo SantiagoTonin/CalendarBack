@@ -7,6 +7,7 @@ import taskRoute from "./routes/tasks.routes.js";
 import imageRoute from "./routes/image.routes.js";
 import userRoute from "./routes/user.routes.js";
 import pictureRoute from "./routes/picture.routes.js";
+import dateRoutes from "./routes/date.routes.js";
 
 
 
@@ -20,6 +21,7 @@ app.use(taskRoute);
 app.use(imageRoute);
 app.use(userRoute);
 app.use(pictureRoute);
+app.use(dateRoutes);
 
 
 
