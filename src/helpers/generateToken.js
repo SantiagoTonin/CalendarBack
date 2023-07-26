@@ -5,6 +5,7 @@ export const generateToken = async (user) => {
     {
       userId:user.userId,
       name: user.name,
+      lastname: user.lastname,
       email: user.email,
       password: user.password,
       birthdate: user.birthdate,

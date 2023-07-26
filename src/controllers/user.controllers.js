@@ -5,8 +5,7 @@ import { cell } from "../models/cells.js";
 import { image } from "../models/imagen.js";
 import { tasks } from "../models/tasks.js";
 import { generateToken } from "../helpers/generateToken.js";
-import { hashPassword,comparePassword } from "../helpers/passwordUtils.js";
-
+import { hashPassword, comparePassword } from "../helpers/passwordUtils.js";
 
 export const getUsers = async (req, res) => {
   try {
@@ -26,10 +25,12 @@ export const getUser = async (req, res) => {
 };
 export const createUser = async (req, res) => {
   try {
-    const { name, email, password, birthdate, nationality, age } = req.body;
+    const { name, lastName, email, password, birthdate, nationality, age } =
+      req.body;
     const encrypted = await hashPassword(password);
     const newUser = await User.create({
       name: name,
+      lastName: lastName,
       email: email,
       password: encrypted,
       birthdate: birthdate,
@@ -49,13 +50,15 @@ export const singIn = async (req, res) => {
     const { email, password } = req.body;
     const resultUser = await User.findOne({ where: { email: email } });
     if (!resultUser) {
-      res.status(404).json({ message:"Usuario con este correo no encontrado"})
-    }else{
+      res
+        .status(404)
+        .json({ message: "Usuario con este correo no encontrado" });
+    } else {
       if (comparePassword(password, resultUser.password)) {
-        const token = await generateToken(resultUser); 
+        const token = await generateToken(resultUser);
         res.status(200).json({ resultUser, token });
-      }else{
-        res.status(400).json({ message:"contraseña incorrecta"})
+      } else {
+        res.status(400).json({ message: "contraseña incorrecta" });
       }
     }
   } catch (error) {
@@ -64,12 +67,13 @@ export const singIn = async (req, res) => {
 };
 export const upgrateUser = async (req, res) => {
   try {
-    const { name, email, birthdate, nationality, age } = req.body;
+    const { name, lastName, email, birthdate, nationality, age } = req.body;
     const result = await User.findByPk(req.params.id);
     if (result === null) {
       throw new Error("El ID no existe.");
     }
     result.name = name;
+    result.lastName = lastName;
     result.email = email;
     result.birthdate = birthdate;
     result.nationality = nationality;
