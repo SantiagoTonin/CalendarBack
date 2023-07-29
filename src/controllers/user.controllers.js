@@ -26,7 +26,7 @@ export const getUser = async (req, res) => {
 };
 export const createUser = async (req, res) => {
   try {
-    const { name, lastName, email, password, birthdate, nationality, age } =
+    const { name, lastName, email, password, birthdate, age, nationality } =
       req.body;
     const encrypted = await hashPassword(password);
     const newUser = await User.create({
@@ -35,8 +35,8 @@ export const createUser = async (req, res) => {
       email: email,
       password: encrypted,
       birthdate: birthdate,
-      nationality: nationality,
       age: age,
+      nationality: nationality,
     });
     const token = await generateToken(newUser);
     sendMail(newUser);
