@@ -1,7 +1,13 @@
 import nodemailer from "nodemailer";
 import { config } from "dotenv";
-
+import {templatEmail} from "../template/email.js";
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const createTransport = () => {
   const transport = nodemailer.createTransport({
@@ -20,11 +26,20 @@ const createTransport = () => {
 export const sendMail = async (user) => {
   try {
     const transporter = createTransport();
+    const htmlContent = await templatEmail(user);
+    const imagePath = path.join(__dirname, '..', 'template', 'asset', 'email.png');
     const info = await transporter.sendMail({
       from: process.env.GMAIL_USER,
       to: `${user.email}`,
       subject: `Hello ${user.name} ${user.lastName}`,
-      html: "<h1>There your registration has been successfully received.</h1>",
+      html: htmlContent,
+      attachments: [
+        {   
+            filename: 'email.png',
+            path: imagePath,
+            cid:"email"
+        },
+    ]
     });
 
     console.log(info);
