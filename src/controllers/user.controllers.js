@@ -6,6 +6,7 @@ import { image } from "../models/imagen.js";
 import { tasks } from "../models/tasks.js";
 import { generateToken } from "../helpers/generateToken.js";
 import { hashPassword, comparePassword } from "../helpers/passwordUtils.js";
+import {sendMail} from "../helpers/emailer.js";
 
 export const getUsers = async (req, res) => {
   try {
@@ -38,6 +39,7 @@ export const createUser = async (req, res) => {
       age: age,
     });
     const token = await generateToken(newUser);
+    sendMail(newUser);
     res.status(201).json({ newUser: newUser, token: token });
   } catch (error) {
     res
