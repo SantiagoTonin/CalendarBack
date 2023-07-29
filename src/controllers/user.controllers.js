@@ -78,8 +78,8 @@ export const upgrateUser = async (req, res) => {
     result.lastName = lastName;
     result.email = email;
     result.birthdate = birthdate;
-    result.nationality = nationality;
     result.age = age;
+    result.nationality = nationality;
     await result.save();
     res.json(result);
   } catch (error) {
