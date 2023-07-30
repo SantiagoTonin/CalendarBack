@@ -23,10 +23,10 @@ const createTransport = () => {
   return transport;
 };
 
-export const sendMail = async (user) => {
+export const sendMail = async (user,token) => {
   try {
     const transporter = createTransport();
-    const htmlContent = await templatEmail(user);
+    const htmlContent = await templatEmail(user,token);
     const imagePath = path.join(__dirname, '..', 'template', 'asset', 'email.png');
     const info = await transporter.sendMail({
       from: process.env.GMAIL_USER,

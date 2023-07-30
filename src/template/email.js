@@ -1,4 +1,4 @@
-export const templatEmail = async (user) => {
+export const templatEmail = async (user,token) => {
   const template = `<!DOCTYPE html>
 	<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 	<head>
@@ -331,7 +331,7 @@ export const templatEmail = async (user) => {
 										<div class="text" style="padding: 0 2.5em; text-align: center;">
 											<h2>Please verify your email</h2>
 											<h3>Confirm your email to have access to the Calendar with all the news</h3>
-											<p><a href="#" class="btn btn-primary">Confirm</a></p>
+											<p><a href="http://localhost:3000/user/checkEmail/${token}" class="btn btn-primary">Confirm</a></p>
 										</div>
 									</td>
 								</tr>

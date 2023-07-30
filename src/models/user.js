@@ -66,6 +66,11 @@ export const User = sequelize.define(
       allowNull: false,
       defaultValue: "USUARIO",
     },
+    checkEmail:{
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
   },
   {
     timestamps: false,

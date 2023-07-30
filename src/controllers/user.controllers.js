@@ -4,9 +4,9 @@ import { calendar } from "../models/calendar.js";
 import { cell } from "../models/cells.js";
 import { image } from "../models/imagen.js";
 import { tasks } from "../models/tasks.js";
-import { generateToken } from "../helpers/generateToken.js";
+import { generateToken, verifyToken } from "../helpers/generateToken.js";
 import { hashPassword, comparePassword } from "../helpers/passwordUtils.js";
-import {sendMail} from "../helpers/emailer.js";
+import { sendMail } from "../helpers/emailer.js";
 
 export const getUsers = async (req, res) => {
   try {
@@ -39,7 +39,7 @@ export const createUser = async (req, res) => {
       nationality: nationality,
     });
     const token = await generateToken(newUser);
-    sendMail(newUser);
+    sendMail(newUser,token);
     res.status(201).json({ newUser: newUser, token: token });
   } catch (error) {
     res
@@ -135,5 +135,43 @@ export const apiComplete = async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: "error interno", error: error.message });
+  }
+};
+
+export const checkMailboxStatus = async (req,res) => {
+  
+  try {
+
+    const { token } = req.params;
+  
+
+    if (typeof token !== "string") {
+      throw new Error("Invalid token format");
+    }
+
+    const user = await verifyToken(token);
+
+ 
+    if (!user) {
+      throw new Error("Invalid token");
+    }
+
+    const resultUser = await User.findOne({ where: { email: user.email } });
+
+  
+    if (!resultUser) {
+      throw new Error("User not found");
+    }
+    resultUser.checkEmail = true;
+    await resultUser.save();
+
+    const htmlResponse = '<h1>¡Hola!</h1>';
+    res.send(htmlResponse);
+
+  } catch (error) {
+    return res.status(400).json({
+      message: "Error validating email",
+      error: error,
+    });
   }
 };

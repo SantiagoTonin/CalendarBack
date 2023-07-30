@@ -7,6 +7,7 @@ import {
   singIn,
   deleteUser,
   apiComplete,
+  checkMailboxStatus,
 } from "../controllers/user.controllers.js";
 import { checkAuth } from "../middleware/auth.middleware.js";
 import { authRoleAuthorized } from "../middleware/roleAuth.middleware.js";
@@ -20,5 +21,6 @@ routes.post("/singin",singIn)
 routes.get("/user/:id",checkAuth,getUser);
 routes.put("/user/:id",checkAuth,upgrateUser);
 routes.delete("/user/:id",checkAuth,deleteUser);
+routes.get("/user/checkEmail/:token",checkMailboxStatus);
 
 export default routes;
