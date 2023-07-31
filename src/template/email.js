@@ -349,3 +349,49 @@ export const templatEmail = async (user,token) => {
 
   return template;
 };
+
+
+export const emailRecoveryPassword = (user,token) => {
+	const template = `<!DOCTYPE html>
+	<html lang="en">
+	<head>
+			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>Password Recovery</title>
+	</head>
+	<body>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+							<td align="center">
+									<table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px;">
+											<tr>
+													<td align="center" bgcolor="#f7f7f7" style="padding: 40px 0;">
+															<h1>Password Recovery</h1>
+													</td>
+											</tr>
+											<tr>
+													<td bgcolor="#ffffff" style="padding: 40px 30px;">
+															<p>Hello ${user.name} ${user.lastName},</p>
+															<p>We received a request to reset your account password. If you did not make this request, you can ignore this email.</p>
+															<p>If you do want to recover your password, please click the following link to continue with the process:</p>
+															<p><a href="[Password Reset Link URL]" target="_blank">Recover Password</a></p>
+															<p>The password recovery link will expire in [Expiration Time] minutes for security reasons.</p>
+															<p>If you have trouble clicking the link, copy and paste the following URL into your browser:</p>
+															<p>[Password Reset Link URL]</p>
+															<p>Thank you,</p>
+													</td>
+											</tr>
+											<tr>
+													<td bgcolor="#f7f7f7" align="center" style="padding: 20px 0;">
+															<p>This is an automated email, please do not reply to this message.</p>
+													</td>
+											</tr>
+									</table>
+							</td>
+					</tr>
+			</table>
+	</body>
+	</html>`
+
+	return template;
+};

@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import { config } from "dotenv";
-import {templatEmail} from "../template/email.js";
+import {templatEmail,emailRecoveryPassword} from "../template/email.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -48,4 +48,24 @@ export const sendMail = async (user,token) => {
     console.error("Error sending email:", error);
     throw error;
   }
+};
+
+export const emailRecoverPassword = (user,token) => {
+  const transporter = createTransport();
+  const htmlContent = emailRecoveryPassword(user,token);
+
+
+  const info = await transporter.sendMail({
+    from: process.env.GMAIL_USER,
+    to: `${user.email}`,
+    subject: `Hello ${user.name} ${user.lastName}`,
+    html: htmlContent,
+    attachments: [
+      {   
+          filename: '',
+          path: "",
+          cid:""
+      },
+  ]
+  });
 };

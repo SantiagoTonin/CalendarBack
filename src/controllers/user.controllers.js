@@ -6,7 +6,7 @@ import { image } from "../models/imagen.js";
 import { tasks } from "../models/tasks.js";
 import { generateToken, verifyToken } from "../helpers/generateToken.js";
 import { hashPassword, comparePassword } from "../helpers/passwordUtils.js";
-import { sendMail } from "../helpers/emailer.js";
+import { sendMail, emailRecoverPassword } from "../helpers/emailer.js";
 
 export const getUsers = async (req, res) => {
   try {
@@ -183,4 +183,70 @@ export const checkMailboxStatus = async (req, res) => {
       error: error,
     });
   }
+};
+
+export const passwordRecoveryRequest = async (req,res) => {
+
+  try {
+    const { email } = req.body;
+    const resultUser = await User.findOne({ where: { email: email } });
+  
+    if (!resultUser) {
+      res
+        .status(404)
+        .json({ message: "User with this email not found" });
+    }
+
+    const token = await generateToken(resultUser);
+  
+     emailRecoverPassword(resultUser,token);
+
+     return res.json({ message: "Message successfully send"});
+    
+  } catch (error) {
+    return res.status(400).json({
+      message: "Error send recovery pass email",
+      error: error,
+    });
+  }
+};
+
+export const passwordChangeRequest = async (req, res) => {
+
+  try {
+    const {token} = req.params;
+    const {password} = req.body;
+
+    if (typeof token !== "string") {
+      throw new Error("Invalid token format");
+    }
+
+    if (!password) {
+      throw new Error("Invalid Password");
+    }
+
+    const user = await verifyToken(token);
+
+    if (!user) {
+      throw new Error("Invalid token");
+    }
+
+    const resultUser = await User.findOne({ where: { email: user.email } });
+
+    const encrypted = await hashPassword(password);
+
+    resultUser.password = encrypted;
+    await resultUser.save();
+
+    return res.status(200).json({
+      message: "Success changed password"
+    });
+
+  } catch (error) {
+    res.status(400).json({
+      message: "Password could not be changed",
+      error: error.errors[0].message,
+    });
+  }
+
 };
