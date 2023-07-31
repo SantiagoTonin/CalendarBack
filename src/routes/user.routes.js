@@ -20,7 +20,7 @@ routes.post("/singup",createUser);
 routes.post("/singin",singIn)
 routes.get("/user/:id",checkAuth,getUser);
 routes.put("/user/:id",checkAuth,upgrateUser);
-routes.delete("/user/:id",checkAuth,deleteUser);
+routes.delete("/user/:id",authRoleAuthorized,deleteUser);
 routes.get("/user/checkEmail/:token",checkMailboxStatus);
 
 export default routes;

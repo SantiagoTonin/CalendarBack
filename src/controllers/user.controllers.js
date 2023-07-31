@@ -39,7 +39,7 @@ export const createUser = async (req, res) => {
       nationality: nationality,
     });
     const token = await generateToken(newUser);
-    sendMail(newUser,token);
+    sendMail(newUser, token);
     res.status(201).json({ newUser: newUser, token: token });
   } catch (error) {
     res
@@ -71,6 +71,14 @@ export const upgrateUser = async (req, res) => {
   try {
     const { name, lastName, email, birthdate, nationality, age } = req.body;
     const result = await User.findByPk(req.params.id);
+
+    if (result.rol === "superADMIN") {
+      return res.status(500).json({
+        message: "no es posible modificar este registro",
+        status: 500,
+      });
+    }
+
     if (result === null) {
       throw new Error("El ID no existe.");
     }
@@ -91,6 +99,13 @@ export const upgrateUser = async (req, res) => {
 };
 export const deleteUser = async (req, res) => {
   try {
+    const resultRole = await User.findByPk(req.params.id);
+    if (resultRole.rol === "superADMIN") {
+      return res.status(500).json({
+        message: "No se puede eliminar un Super Admin",
+        status: 500,
+      });
+    }
     const result = await User.destroy({
       where: { userId: req.params.id },
     });
@@ -138,12 +153,9 @@ export const apiComplete = async (req, res) => {
   }
 };
 
-export const checkMailboxStatus = async (req,res) => {
-  
+export const checkMailboxStatus = async (req, res) => {
   try {
-
     const { token } = req.params;
-  
 
     if (typeof token !== "string") {
       throw new Error("Invalid token format");
@@ -151,23 +163,20 @@ export const checkMailboxStatus = async (req,res) => {
 
     const user = await verifyToken(token);
 
- 
     if (!user) {
       throw new Error("Invalid token");
     }
 
     const resultUser = await User.findOne({ where: { email: user.email } });
 
-  
     if (!resultUser) {
       throw new Error("User not found");
     }
     resultUser.checkEmail = true;
     await resultUser.save();
 
-    const htmlResponse = '<h1>¡Hola!</h1>';
+    const htmlResponse = "<h1>¡Hola!</h1>";
     res.send(htmlResponse);
-
   } catch (error) {
     return res.status(400).json({
       message: "Error validating email",

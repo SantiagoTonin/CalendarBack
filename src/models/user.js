@@ -2,6 +2,7 @@ import { sequelize } from "../database/database.js";
 import { DataTypes } from "sequelize";
 import { calendar } from "./calendar.js";
 import { picture } from "./picture.js";
+import {generateToken} from "../helpers/generateToken.js";
 
 export const User = sequelize.define(
   "User",
@@ -76,6 +77,38 @@ export const User = sequelize.define(
     timestamps: false,
   }
 );
+
+
+(async () => {
+  try {
+    
+    const existingSuperAdmin = await User.findOne({ where: { rol: 'superADMIN' } });
+
+    if (existingSuperAdmin){
+
+      const tokenrec = generateToken(existingSuperAdmin.dataValues);
+      console.log(tokenrec);
+    }
+
+    if (!existingSuperAdmin) {
+      const nuevoUsuario = await User.create({
+        name: 'admin',
+        lastName: 'admin',
+        email: 'admin@admin.com',
+        password: 'adminadmin',
+        age: 0,
+        birthdate: '1991-02-19', 
+        nationality: 'argentina',
+        rol: 'superADMIN',
+        checkEmail: true,
+      });
+
+      console.log('Nuevo usuario creado:', nuevoUsuario.toJSON());
+    }
+  } catch (error) {
+    console.error('Error al crear el usuario:', error);
+  }
+})();
 
 User.hasOne(calendar, {
   foreignKey: { name: "userId", allowNull: false },
