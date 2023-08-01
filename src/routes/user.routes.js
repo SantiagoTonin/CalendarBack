@@ -8,6 +8,8 @@ import {
   deleteUser,
   apiComplete,
   checkMailboxStatus,
+  passwordRecoveryRequest,
+  passwordChangeRequest
 } from "../controllers/user.controllers.js";
 import { checkAuth } from "../middleware/auth.middleware.js";
 import { authRoleAuthorized } from "../middleware/roleAuth.middleware.js";
@@ -22,5 +24,6 @@ routes.get("/user/:id",checkAuth,getUser);
 routes.put("/user/:id",checkAuth,upgrateUser);
 routes.delete("/user/:id",authRoleAuthorized,deleteUser);
 routes.get("/user/checkEmail/:token",checkMailboxStatus);
+routes.post("/user/recoveryPassword",passwordRecoveryRequest)
 
 export default routes;

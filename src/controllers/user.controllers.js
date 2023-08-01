@@ -189,12 +189,11 @@ export const passwordRecoveryRequest = async (req,res) => {
 
   try {
     const { email } = req.body;
+    console.log(email);
     const resultUser = await User.findOne({ where: { email: email } });
   
     if (!resultUser) {
-      res
-        .status(404)
-        .json({ message: "User with this email not found" });
+      throw new Error("Email not found in the database");
     }
 
     const token = await generateToken(resultUser);
@@ -206,7 +205,7 @@ export const passwordRecoveryRequest = async (req,res) => {
   } catch (error) {
     return res.status(400).json({
       message: "Error send recovery pass email",
-      error: error,
+      error: error.message,
     });
   }
 };

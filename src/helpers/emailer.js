@@ -50,7 +50,7 @@ export const sendMail = async (user,token) => {
   }
 };
 
-export const emailRecoverPassword = (user,token) => {
+export const emailRecoverPassword = async (user,token) => {
   const transporter = createTransport();
   const htmlContent = emailRecoveryPassword(user,token);
 
