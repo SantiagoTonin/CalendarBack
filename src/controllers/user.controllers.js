@@ -189,7 +189,7 @@ export const passwordRecoveryRequest = async (req,res) => {
 
   try {
     const { email } = req.body;
-    console.log(email);
+
     const resultUser = await User.findOne({ where: { email: email } });
   
     if (!resultUser) {

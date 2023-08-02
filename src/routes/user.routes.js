@@ -24,6 +24,7 @@ routes.get("/user/:id",checkAuth,getUser);
 routes.put("/user/:id",checkAuth,upgrateUser);
 routes.delete("/user/:id",authRoleAuthorized,deleteUser);
 routes.get("/user/checkEmail/:token",checkMailboxStatus);
-routes.post("/user/recoveryPassword",passwordRecoveryRequest)
+routes.post("/user/recoveryPassword",passwordRecoveryRequest);
+routes.post("/user/recoveryPassword/:token",passwordChangeRequest);
 
 export default routes;

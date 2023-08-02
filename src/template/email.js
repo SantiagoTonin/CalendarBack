@@ -352,6 +352,9 @@ export const templatEmail = async (user,token) => {
 
 
 export const emailRecoveryPassword = (user,token) => {
+
+	const recoveryLink = `http://localhost:3000/user/recoveryPassword?token=${token}`; // modificar el link para mandar al front la peticion
+
 	const template = `<!DOCTYPE html>
 	<html lang="en">
 	<head>
@@ -374,10 +377,8 @@ export const emailRecoveryPassword = (user,token) => {
 															<p>Hello ${user.name} ${user.lastName},</p>
 															<p>We received a request to reset your account password. If you did not make this request, you can ignore this email.</p>
 															<p>If you do want to recover your password, please click the following link to continue with the process:</p>
-															<p><a href="[Password Reset Link URL]" target="_blank">Recover Password</a></p>
+															<p><a href="${recoveryLink}" target="_blank">Recover Password</a></p>
 															<p>The password recovery link will expire in [Expiration Time] minutes for security reasons.</p>
-															<p>If you have trouble clicking the link, copy and paste the following URL into your browser:</p>
-															<p>[Password Reset Link URL]</p>
 															<p>Thank you,</p>
 													</td>
 											</tr>
