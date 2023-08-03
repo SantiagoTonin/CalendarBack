@@ -4,8 +4,9 @@ import { calendar } from "../models/calendar.js";
 import { cell } from "../models/cells.js";
 import { image } from "../models/imagen.js";
 import { tasks } from "../models/tasks.js";
+import {dataUser} from "../lib/dataSerch.js";
 
-import { Op, Sequelize } from "sequelize";
+import { json, Op, Sequelize } from "sequelize";
 
 export const getDateDays = async (req, res) => {
   try {
@@ -93,4 +94,25 @@ export const getExactDate = async (req, res) => {
       .status(500)
       .json({ error: error, message: "no se pudo traer los datos" });
   }
+};
+
+export const getDataBetweenUsers = async (req, res) => {
+ try {
+  const { Ids } = req.body;
+
+
+  const userDataPromises = Ids.map((userId) => {
+    return dataUser(userId)
+  });
+
+ 
+  const userDataArray = await Promise.all(userDataPromises);
+
+ 
+  const userDataFiltered = userDataArray.filter((data) => data !== null);
+
+  return res.status(200).json(userDataFiltered);
+ } catch (error) {
+  res.json({ error: error, message: "no se pudo traer los datos" });
+ }
 };

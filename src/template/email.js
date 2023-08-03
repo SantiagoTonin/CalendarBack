@@ -354,6 +354,7 @@ export const templatEmail = async (user,token) => {
 export const emailRecoveryPassword = (user,token) => {
 
 	const recoveryLink = `http://localhost:3000/user/recoveryPassword?token=${token}`; // modificar el link para mandar al front la peticion
+	console.log(token);
 
 	const template = `<!DOCTYPE html>
 	<html lang="en">

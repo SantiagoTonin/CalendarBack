@@ -4,6 +4,7 @@ import { calendar } from "../models/calendar.js";
 import { cell } from "../models/cells.js";
 import { image } from "../models/imagen.js";
 import { tasks } from "../models/tasks.js";
+import {dataUser} from "../lib/dataSerch.js";
 import { generateToken, verifyToken } from "../helpers/generateToken.js";
 import { hashPassword, comparePassword } from "../helpers/passwordUtils.js";
 import { sendMail, emailRecoverPassword } from "../helpers/emailer.js";
@@ -18,7 +19,7 @@ export const getUsers = async (req, res) => {
 };
 export const getUser = async (req, res) => {
   try {
-    const result = await User.findByPk(req.params.id);
+    const result = await dataUser(req.params.id)
     res.json(result);
   } catch (error) {
     res.status(500).json({ error: error });
@@ -39,7 +40,7 @@ export const createUser = async (req, res) => {
       nationality: nationality,
     });
     const token = await generateToken(newUser);
-    sendMail(newUser, token);
+    //sendMail(newUser, token);
     res.status(201).json({ newUser: newUser, token: token });
   } catch (error) {
     res
@@ -56,7 +57,7 @@ export const singIn = async (req, res) => {
         .status(404)
         .json({ message: "Usuario con este correo no encontrado" });
     } else {
-      if (comparePassword(password, resultUser.password)) {
+       if(await comparePassword(password, resultUser.password)) {
         const token = await generateToken(resultUser);
         res.status(200).json({ resultUser, token });
       } else {
@@ -185,23 +186,21 @@ export const checkMailboxStatus = async (req, res) => {
   }
 };
 
-export const passwordRecoveryRequest = async (req,res) => {
-
+export const passwordRecoveryRequest = async (req, res) => {
   try {
     const { email } = req.body;
 
     const resultUser = await User.findOne({ where: { email: email } });
-  
+
     if (!resultUser) {
       throw new Error("Email not found in the database");
     }
 
     const token = await generateToken(resultUser);
-  
-     emailRecoverPassword(resultUser,token);
 
-     return res.json({ message: "Message successfully send"});
-    
+    emailRecoverPassword(resultUser, token);
+
+    return res.json({ message: "Message successfully send" });
   } catch (error) {
     return res.status(400).json({
       message: "Error send recovery pass email",
@@ -211,10 +210,9 @@ export const passwordRecoveryRequest = async (req,res) => {
 };
 
 export const passwordChangeRequest = async (req, res) => {
-
   try {
-    const {token} = req.params;
-    const {password} = req.body;
+    const { token } = req.params;
+    const { password } = req.body;
 
     if (typeof token !== "string") {
       throw new Error("Invalid token format");
@@ -238,14 +236,12 @@ export const passwordChangeRequest = async (req, res) => {
     await resultUser.save();
 
     return res.status(200).json({
-      message: "Success changed password"
+      message: "Success changed password",
     });
-
   } catch (error) {
     res.status(400).json({
       message: "Password could not be changed",
       error: error.errors[0].message,
     });
   }
-
 };
