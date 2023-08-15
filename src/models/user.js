@@ -3,6 +3,8 @@ import { DataTypes } from "sequelize";
 import { calendar } from "./calendar.js";
 import { picture } from "./picture.js";
 import {generateToken} from "../helpers/generateToken.js";
+import { hashPassword } from "../helpers/passwordUtils.js";
+
 
 export const User = sequelize.define(
   "User",
@@ -91,11 +93,12 @@ export const User = sequelize.define(
     }
 
     if (!existingSuperAdmin) {
+      const encryptedPassword = await pass();
       const nuevoUsuario = await User.create({
         name: 'admin',
         lastName: 'admin',
         email: 'admin@admin.com',
-        password: 'adminadmin',
+        password: encryptedPassword,
         age: 0,
         birthdate: '1991-02-19', 
         nationality: 'argentina',
@@ -132,3 +135,16 @@ picture.belongsTo(User, {
   foreignKey: {name:"userId",allowNull: false,validate:{notNull:{msg: "El userId no puede ser null"}}},
   targetKey: "userId",
 });
+
+
+
+const pass = async () => {
+  try {
+    const passwordEncryption = await hashPassword("adminadmin");
+    console.log(typeof passwordEncryption);
+    return passwordEncryption;
+  } catch (error) {
+    console.error("Error hashing password:", error);
+    throw error; 
+  }
+};
