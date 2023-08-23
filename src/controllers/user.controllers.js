@@ -59,7 +59,7 @@ export const singIn = async (req, res) => {
     } else {
        if(await comparePassword(password, resultUser.password)) {
         const token = await generateToken(resultUser);
-        res.status(200).json({ resultUser, token });
+        res.status(200).json({ token });
       } else {
         res.status(400).json({ message: "contraseña incorrecta" });
       }
@@ -90,7 +90,8 @@ export const upgrateUser = async (req, res) => {
     result.age = age;
     result.nationality = nationality;
     await result.save();
-    res.json(result);
+    const token = await generateToken(result);
+        res.status(200).json({ token });
   } catch (error) {
     res.status(400).json({
       message: "El usuario no se pudo actualizar",
@@ -243,5 +244,20 @@ export const passwordChangeRequest = async (req, res) => {
       message: "Password could not be changed",
       error: error.errors[0].message,
     });
+  }
+};
+
+export const infoUsers = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ").pop();
+    if (!token) {
+      throw new Error(" token null");
+    }
+    const tokenData = await verifyToken(token);
+    console.log(tokenData)
+    res.status(200).json(tokenData);
+    
+  } catch (error) {
+    res.status(409).json({ message: "Invalid Token" });
   }
 };

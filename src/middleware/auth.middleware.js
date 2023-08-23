@@ -8,6 +8,6 @@ export const checkAuth = async (req, res, next) => {
       next();
     }
   } catch (error) {
-    res.status(409).json({ message: "Invalid authorization" });
+    res.status(409).json({ message: "Invalid authorization" },{error: error.message});
   }
 };

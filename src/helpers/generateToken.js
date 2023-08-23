@@ -7,11 +7,9 @@ export const generateToken = async (user) => {
       name: user.name,
       lastName: user.lastName,
       email: user.email,
-      password: user.password,
       birthdate: user.birthdate,
       nationality: user.nationality,
       age: user.age,
-      checkMail: user.checkMail,
     },
     process.env.JWT_PASSWORD,
     {

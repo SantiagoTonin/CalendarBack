@@ -18,6 +18,9 @@ const createTransport = () => {
       user: process.env.GMAIL_USER,
       pass: process.env.GMAIL_PASS,
     },
+    tls: {
+      rejectUnauthorized: false, // Desactiva la verificación de certificados
+    },
   });
 
   return transport;
