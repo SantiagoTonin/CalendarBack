@@ -105,9 +105,7 @@ export const getDataBetweenUsers = async (req, res) => {
     return dataUser(userId)
   });
 
- 
   const userDataArray = await Promise.all(userDataPromises);
-
  
   const userDataFiltered = userDataArray.filter((data) => data !== null);
 

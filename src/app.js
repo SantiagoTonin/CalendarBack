@@ -8,6 +8,7 @@ import imageRoute from "./routes/image.routes.js";
 import userRoute from "./routes/user.routes.js";
 import pictureRoute from "./routes/picture.routes.js";
 import dateRoutes from "./routes/date.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 
 
 
@@ -22,6 +23,7 @@ app.use(imageRoute);
 app.use(userRoute);
 app.use(pictureRoute);
 app.use(dateRoutes);
+app.use(adminRoutes);
 
 
 

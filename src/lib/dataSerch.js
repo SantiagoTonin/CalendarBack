@@ -4,11 +4,13 @@ import { calendar } from "../models/calendar.js";
 import { cell } from "../models/cells.js";
 import { image } from "../models/imagen.js";
 import { tasks } from "../models/tasks.js";
+import {Op} from "sequelize"
 
 
 export const dataUser = async (dataId) => {
   try {
     const result = await User.findByPk(dataId, {
+      attributes: { exclude: ["password", "checkEmail"] },
       include: [
         { model: picture },
         {
@@ -21,8 +23,47 @@ export const dataUser = async (dataId) => {
       ],
     });
 
-    return result
+    return result;
   } catch (error) {
     res.status(500).json({ error: error });
+  }
+};
+
+
+
+export const searchName = async (name) => {
+  try {
+    const result = await User.findOne({
+      attributes: { exclude: ["password", "checkEmail"] },
+      where: {
+        name: {
+          [Op.like]: `%${name}%`
+        }
+      },
+    });
+    return result;
+  } catch (error) {
+    // Manejo del error aquí
+    console.error(error);
+    throw error;
+  }
+};
+
+
+export const searchLastName = async (lastName) => {
+  try {
+    const result = await User.findOne({
+      attributes: { exclude: ["password", "checkEmail"] },
+      where: {
+        name: {
+          [Op.like]: `%${lastName}%`
+        }
+      },
+    });
+    return result;
+  } catch (error) {
+    // Manejo del error aquí
+    console.error(error);
+    throw error;
   }
 };

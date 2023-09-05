@@ -4,14 +4,16 @@ import { calendar } from "../models/calendar.js";
 import { cell } from "../models/cells.js";
 import { image } from "../models/imagen.js";
 import { tasks } from "../models/tasks.js";
-import {dataUser} from "../lib/dataSerch.js";
+import { dataUser } from "../lib/dataSerch.js";
 import { generateToken, verifyToken } from "../helpers/generateToken.js";
 import { hashPassword, comparePassword } from "../helpers/passwordUtils.js";
 import { sendMail, emailRecoverPassword } from "../helpers/emailer.js";
 
 export const getUsers = async (req, res) => {
   try {
-    const result = await User.findAll();
+    const result = await User.findAll({
+      attributes: { exclude: ["password"] },
+    });
     res.json(result);
   } catch (error) {
     res.status(500).json({ error: error });
@@ -19,7 +21,7 @@ export const getUsers = async (req, res) => {
 };
 export const getUser = async (req, res) => {
   try {
-    const result = await dataUser(req.params.id)
+    const result = await dataUser(req.params.id);
     res.json(result);
   } catch (error) {
     res.status(500).json({ error: error });
@@ -57,7 +59,7 @@ export const singIn = async (req, res) => {
         .status(404)
         .json({ message: "Usuario con este correo no encontrado" });
     } else {
-       if(await comparePassword(password, resultUser.password)) {
+      if (await comparePassword(password, resultUser.password)) {
         const token = await generateToken(resultUser);
         res.status(200).json({ token });
       } else {
@@ -72,6 +74,7 @@ export const upgrateUser = async (req, res) => {
   try {
     const { name, lastName, email, birthdate, nationality, age } = req.body;
     const result = await User.findByPk(req.params.id);
+    console.log(result);
 
     if (result.rol === "superADMIN") {
       return res.status(500).json({
@@ -91,7 +94,7 @@ export const upgrateUser = async (req, res) => {
     result.nationality = nationality;
     await result.save();
     const token = await generateToken(result);
-        res.status(200).json({ token });
+    res.status(200).json({ token });
   } catch (error) {
     res.status(400).json({
       message: "El usuario no se pudo actualizar",
@@ -254,9 +257,8 @@ export const infoUsers = async (req, res) => {
       throw new Error(" token null");
     }
     const tokenData = await verifyToken(token);
-    console.log(tokenData)
+    console.log(tokenData);
     res.status(200).json(tokenData);
-    
   } catch (error) {
     res.status(409).json({ message: "Invalid Token" });
   }
