@@ -4,7 +4,13 @@ import { calendar } from "../models/calendar.js";
 import { cell } from "../models/cells.js";
 import { image } from "../models/imagen.js";
 import { tasks } from "../models/tasks.js";
-import {dataUser} from "../lib/dataSerch.js";
+import {
+  dataUser,
+  searchName,
+  searchLastName,
+  searchUsersNameLastName,
+  searchUsersByEmail
+} from "../lib/dataSerch.js";
 
 import { json, Op, Sequelize } from "sequelize";
 
@@ -97,20 +103,57 @@ export const getExactDate = async (req, res) => {
 };
 
 export const getDataBetweenUsers = async (req, res) => {
- try {
-  const { Ids } = req.body;
+  try {
+    const { Ids } = req.body;
 
+    const userDataPromises = Ids.map((userId) => {
+      return dataUser(userId);
+    });
 
-  const userDataPromises = Ids.map((userId) => {
-    return dataUser(userId)
-  });
+    const userDataArray = await Promise.all(userDataPromises);
 
-  const userDataArray = await Promise.all(userDataPromises);
- 
-  const userDataFiltered = userDataArray.filter((data) => data !== null);
+    const userDataFiltered = userDataArray.filter((data) => data !== null);
 
-  return res.status(200).json(userDataFiltered);
- } catch (error) {
-  res.json({ error: error, message: "no se pudo traer los datos" });
- }
+    return res.status(200).json(userDataFiltered);
+  } catch (error) {
+    res.json({ error: error, message: "no se pudo traer los datos" });
+  }
+};
+
+export const getDataUser = async (req, res) => {
+  try {
+    const { data } = req.query;
+
+    if (!data || data.trim() === "") {
+      res.status(400).json({ message: "El nombre no puede estar vacío" });
+      return;
+    }
+
+    if (data.includes("@")) {
+      console.log(data)
+      const result = await searchUsersByEmail(data) || " no data "
+      return res.status(200).json({ result: result });
+    }
+
+    const stringWithSpaces = data.replace(/\+/g, " ");
+    const arrayName = stringWithSpaces.split(" ");
+    console.log(arrayName);
+
+    if (arrayName.length > 1) {
+      const name = arrayName[0] || " ";
+      const lastName = arrayName.slice(1).join(" ") || " ";
+      const result = await searchUsersNameLastName(name, lastName);
+      res.status(200).json({ result: result });
+    } else {
+      const name = arrayName[0];
+      const resultName = await searchName(name);
+      const resultLastName = await searchLastName(name);
+      res
+        .status(200)
+        .json({ resultName: resultName, resultLastName: resultLastName });
+    }
+    return;
+  } catch (error) {
+    res.json({ error: error, message: "no se pudo traer los datos" });
+  }
 };

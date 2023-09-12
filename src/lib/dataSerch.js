@@ -4,8 +4,7 @@ import { calendar } from "../models/calendar.js";
 import { cell } from "../models/cells.js";
 import { image } from "../models/imagen.js";
 import { tasks } from "../models/tasks.js";
-import {Op} from "sequelize"
-
+import { Op } from "sequelize";
 
 export const dataUser = async (dataId) => {
   try {
@@ -29,16 +28,14 @@ export const dataUser = async (dataId) => {
   }
 };
 
-
-
 export const searchName = async (name) => {
   try {
-    const result = await User.findOne({
+    const result = await User.findAll({
       attributes: { exclude: ["password", "checkEmail"] },
       where: {
         name: {
-          [Op.like]: `%${name}%`
-        }
+          [Op.like]: `%${name}%`,
+        },
       },
     });
     return result;
@@ -48,22 +45,51 @@ export const searchName = async (name) => {
     throw error;
   }
 };
-
 
 export const searchLastName = async (lastName) => {
   try {
-    const result = await User.findOne({
+    const result = await User.findAll({
       attributes: { exclude: ["password", "checkEmail"] },
       where: {
-        name: {
-          [Op.like]: `%${lastName}%`
-        }
+        lastName: {
+          [Op.like]: `%${lastName}%`,
+        },
       },
     });
     return result;
   } catch (error) {
-    // Manejo del error aquí
     console.error(error);
     throw error;
   }
 };
+
+export async function searchUsersNameLastName(name, lastName) {
+  try {
+    const users = await User.findAll({
+      attributes: { exclude: ["password", "checkEmail"] },
+      where: {
+        name: {
+          [Op.like]: `%${name}%`,
+        },
+        lastName: {
+          [Op.like]: `%${lastName}%`,
+        },
+      },
+    });
+    return users;
+  } catch (error) {
+    console.error("Error searching for users:", error);
+  }
+}
+
+export async function searchUsersByEmail(email) {
+  try {
+    const users = await User.findOne({
+      attributes: { exclude: ["password", "checkEmail"] },
+      where: {email: email},
+    });
+    return users;
+  } catch (error) {
+    console.error("Error searching for users:", error);
+  }
+}
