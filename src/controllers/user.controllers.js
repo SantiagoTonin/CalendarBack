@@ -257,8 +257,8 @@ export const infoUsers = async (req, res) => {
       throw new Error(" token null");
     }
     const tokenData = await verifyToken(token);
-    console.log(tokenData);
-    res.status(200).json(tokenData);
+    const result = await dataUser(tokenData.userId);
+    res.status(200).json(result);
   } catch (error) {
     res.status(409).json({ message: "Invalid Token" });
   }
