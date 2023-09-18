@@ -14,10 +14,17 @@ export const dataUser = async (dataId) => {
         { model: picture },
         {
           model: calendar,
-          include: {
-            model: cell,
-            include: [{ model: tasks }, { model: image }],
-          },
+          include: [
+            {
+              model: cell,
+              include: [
+                {
+                  model: image,
+                },
+                { model: tasks },
+              ],
+            },
+          ],
         },
       ],
     });

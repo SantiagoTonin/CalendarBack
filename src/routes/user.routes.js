@@ -19,7 +19,7 @@ const routes = Router();
 
 routes.get("/user/api",apiComplete);
 routes.get("/user",getUsers);
-routes.post("/singup",createUser);
+routes.post("/signup",createUser);
 routes.post("/singin",singIn)
 routes.get("/user/:id",getUser); //se desabilito el check para agilizar algunas cosas
 routes.put("/user/:id",upgrateUser);

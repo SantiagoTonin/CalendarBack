@@ -12,7 +12,7 @@ import { authRoleAuthorized } from "../middleware/roleAuth.middleware.js";
 const route = Router();
 
 route.get("/cells", authRoleAuthorized, getCells);
-route.post("/cells", checkAuth, createCells);
+route.post("/cells",  createCells);
 route.get("/cells/:id", checkAuth, getCell);
 route.put("/cells/:id", checkAuth, updateCell);
 route.delete("/cells/:id", checkAuth, deleteCell);

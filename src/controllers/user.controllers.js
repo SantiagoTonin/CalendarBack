@@ -22,7 +22,7 @@ export const getUsers = async (req, res) => {
 export const getUser = async (req, res) => {
   try {
     const result = await dataUser(req.params.id);
-    res.json(result);
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ error: error });
   }

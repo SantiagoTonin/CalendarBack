@@ -12,6 +12,9 @@ export const cell = sequelize.define("cells", {
   date: {
     type: DataTypes.DATE,
   },
+  
+},  {
+  timestamps: false,
 });
 
 cell.hasMany(tasks, {
