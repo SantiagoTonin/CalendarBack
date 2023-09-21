@@ -4,6 +4,7 @@ import { calendar } from "../models/calendar.js";
 import { cell } from "../models/cells.js";
 import { image } from "../models/imagen.js";
 import { tasks } from "../models/tasks.js";
+import { post } from "../models/post.js";
 import { Op } from "sequelize";
 
 export const dataUser = async (dataId) => {
@@ -19,9 +20,12 @@ export const dataUser = async (dataId) => {
               model: cell,
               include: [
                 {
-                  model: image,
+                  model: post,
+                  include: [
+                    { model: tasks },
+                    { model: image },
+                  ],
                 },
-                { model: tasks },
               ],
             },
           ],
@@ -31,9 +35,11 @@ export const dataUser = async (dataId) => {
 
     return result;
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error("Error en la función dataUser:", error);
+    throw error;
   }
 };
+
 
 export const searchName = async (name) => {
   try {
@@ -100,3 +106,28 @@ export async function searchUsersByEmail(email) {
     console.error("Error searching for users:", error);
   }
 }
+
+export const getDataByDate = async (dateSearched) => {
+  try {
+    const result = await cell.findOne({
+      where: {
+        date: dateSearched,
+      },
+      include: [
+        {
+          model: post,
+          include: [image, tasks],
+        },
+      ],
+    });
+
+    if (!result) {
+      throw new Error('No se encontró ninguna Cell para la fecha proporcionada.');
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Error al obtener datos:', error);
+    throw error;
+  }
+};

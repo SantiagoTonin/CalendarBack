@@ -1,23 +1,25 @@
 import { sequelize } from "../database/database.js";
 import { DataTypes } from "sequelize";
-import { tasks } from "./tasks.js";
-import { image } from "./imagen.js";
+import { post } from "./post.js";
 
-export const cell = sequelize.define("cells", {
-  cellsId: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+export const cell = sequelize.define(
+  "cells",
+  {
+    cellsId: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    date: {
+      type: DataTypes.DATE,
+    },
   },
-  date: {
-    type: DataTypes.DATE,
-  },
-  
-},  {
-  timestamps: false,
-});
+  {
+    timestamps: true,
+  }
+);
 
-cell.hasMany(tasks, {
+cell.hasMany(post, {
   foreignKey: {
     name: "cellsId",
     allowNull: false,
@@ -25,22 +27,10 @@ cell.hasMany(tasks, {
   sourceKey: "cellsId",
 });
 
-tasks.belongsTo(cell, {
-  foreignKey: {name:"cellsId",allowNull: false,validate:{notNull:{msg: "El userId no puede ser null"}}},
-  targetKey: "cellsId",
-
-});
-
-cell.hasMany(image, {
+post.belongsTo(cell, {
   foreignKey: {
     name: "cellsId",
     allowNull: false,
   },
-  sourceKey: "cellsId",
-});
-
-image.belongsTo(cell, {
-  foreignKey: {name:"cellsId",allowNull: false,validate:{notNull:{msg: "El userId no puede ser null"}}},
   targetKey: "cellsId",
 });
-

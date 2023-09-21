@@ -21,12 +21,11 @@ export const getTask = async (req, res) => {
 };
 export const createTask = async (req, res) => {
   try {
-    console.log("llegue");
-    const { name, description, cellsId } = req.body;
+    const {postMessage,postId} = req.body;
+    console.log(req.body);
     const result = await tasks.create({
-      name: name,
-      description: description,
-      cellsId: cellsId,
+      postMessage:postMessage,
+      postId: postId,
     });
     res.json(result);
   } catch (error) {

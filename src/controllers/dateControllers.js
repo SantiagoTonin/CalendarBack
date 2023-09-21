@@ -9,7 +9,8 @@ import {
   searchName,
   searchLastName,
   searchUsersNameLastName,
-  searchUsersByEmail
+  searchUsersByEmail,
+  getDataByDate
 } from "../lib/dataSerch.js";
 
 import { json, Op, Sequelize } from "sequelize";
@@ -153,6 +154,24 @@ export const getDataUser = async (req, res) => {
         .json({ resultName: resultName, resultLastName: resultLastName });
     }
     return;
+  } catch (error) {
+    res.json({ error: error, message: "no se pudo traer los datos" });
+  }
+};
+
+export const getDataByCell = async (req, res) => {
+  try {
+    const {date}= req.body;
+    console.log("llegue");
+    if (!date) {
+      res.status(400).json({ message: "La fecha no puede ser null" });
+      return;
+    }
+
+    const result = await getDataByDate(date);
+
+    res.status(200).json({data: result});
+    
   } catch (error) {
     res.json({ error: error, message: "no se pudo traer los datos" });
   }

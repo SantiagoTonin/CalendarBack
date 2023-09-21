@@ -4,11 +4,6 @@ import { clean } from "./lib/imageCleaner.js";
 import {config} from "dotenv";
 
 
-
-
-
-
-
 async function main() {
 try {
   await sequelize.sync({force:false});

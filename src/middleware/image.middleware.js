@@ -2,13 +2,13 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-const dir = './images';
+const dir = './image';
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir);
 }
 
 const storage = multer.diskStorage({
-  destination: path.resolve('./images'),
+  destination: path.resolve('./image'),
   filename: function(req, file, cb) {
     cb(null, file.originalname);
   }
@@ -27,5 +27,5 @@ export const upload = multer({
 
     cb(new Error("Error: El archivo debe ser una imagen válida"));
   },
-  array: "images"
+  array: "image"
 });

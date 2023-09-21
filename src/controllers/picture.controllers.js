@@ -22,9 +22,11 @@ export const createPicture = async (req, res) => {
     const { originalname, mimetype, path, size } = req.file;
     const { userId } = req.body;
 
+    const imageUrl = `${req.protocol}://${req.get("host")}/image/${originalname}`; 
+
     const resImage = picture.create({
       name: originalname,
-      path: path,
+      path: imageUrl,
       mime: mimetype,
       imageSize: formatBytes(size),
       userId: userId,

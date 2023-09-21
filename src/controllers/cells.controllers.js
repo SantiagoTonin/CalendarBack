@@ -1,6 +1,4 @@
 import { cell } from "../models/cells.js";
-import { image } from "../models/imagen.js";
-import { Op } from "sequelize";
 
 
 export const getCells = async (req, res) => {
@@ -16,26 +14,14 @@ export const getCells = async (req, res) => {
 
 export const createCells = async (req, res) => {
   try {
-    const { date, calendarId } = req.body;
+    const { date,postMessage, calendarId } = req.body;
     console.log(req.body);
     const fecha = new Date(date);
     const fechaSinHora = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
 
-
-    const existingRecord = await cell.findOne({
-      where: {
-        date: {
-          [Op.eq]: fechaSinHora,
-        },
-      },
-    });
-
-    if (existingRecord){
-      res.json({message:"La fecha ya posee un ID"});
-    }
-
   const createCells = await cell.create({
       date: fechaSinHora,
+      postMessage:postMessage,
       calendarId: calendarId,
     });
     res.status(200).json(createCells);
@@ -76,22 +62,6 @@ export const deleteCell = async (req, res) => {
     res.json({ message: "La celda fue eleminada exitosamente" });
   } catch (error) {
     res.status(500).json({ message: "se produjo interno en servidor" });
-  }
-};
-
-export const getImageCells = async (req, res) => {
-  try {
-    const result = await cell.findAll({
-      include: [
-        {
-          model: image,
-        },
-      ],
-    });
-    console.log(result);
-    res.json({ result });
-  } catch (error) {
-    res.status(500).json({ message: "no se pudo traer los datos" });
   }
 };
 

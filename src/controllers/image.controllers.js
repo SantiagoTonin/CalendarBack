@@ -22,26 +22,40 @@ export const getImage = async (req, res, next) => {
     res.status(500);
   }
 };
+
 export const createImages = async (req, res, next) => {
   try {
-    req.files.forEach((file) => {
+    console.log(req.file);
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "No se han subido imágenes." });
+    }
+
+    const { postId } = req.body;
+
+    const imagePromises = req.files.map((file) => {
       const { originalname, mimetype, path, size } = file;
-      const {cellsId} = req.body;
-      const resImage = image.create({
+
+      // La URL debe ser construida en función de la carpeta donde se guardan las imágenes
+      const imageUrl = `${req.protocol}://${req.get("host")}/image/${originalname}`; 
+
+      return image.create({
         name: originalname,
-        path: path,
+        path: imageUrl, // Guarda la URL construida
         mime: mimetype,
         imageSize: formatBytes(size),
-        cellsId: cellsId
-      }); 
-
+        postId: postId,
+      });
     });
-    res.json({message:"Se subio correctamente la imagen"});
 
+    await Promise.all(imagePromises);
+
+    res.status(201).json({ message: "Se subieron correctamente las imágenes." });
   } catch (error) {
-    res.json({ error: error });
+    console.error("Error al subir imágenes:", error);
+    res.status(500).json({ error: "Hubo un error al subir las imágenes." });
   }
 };
+
 
 export const upgradeImages = async (req, res, next) => {
   try {

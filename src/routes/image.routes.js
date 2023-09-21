@@ -8,9 +8,9 @@ import { authRoleAuthorized } from "../middleware/roleAuth.middleware.js";
 const route = Router();
 
 route.get("/image",authRoleAuthorized,getImages)
-route.post("/image",checkAuth,upload.array("images",3),deleteImage,createImages)
-route.get("/image/:id",checkAuth,getImage)
-route.put("/image/:id",checkAuth,upload.array("images",3),upgradeImages)
+route.post("/image",checkAuth,upload.array("image",3),deleteImage,createImages)
+route.get("/image/:id",getImage)
+route.put("/image/:id",checkAuth,upload.array("image",3),upgradeImages)
 route.delete("/image/:path",checkAuth,deleteImages)
 
 export default route;
