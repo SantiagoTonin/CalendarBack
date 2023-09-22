@@ -173,6 +173,6 @@ export const getDataByCell = async (req, res) => {
     res.status(200).json({data: result});
     
   } catch (error) {
-    res.json({ error: error, message: "no se pudo traer los datos" });
+    res.status(404).json({ error: error, message: "no se pudo traer los datos" });
   }
 };
