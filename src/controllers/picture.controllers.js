@@ -20,9 +20,10 @@ export const getPicture = async (req, res) => {
 export const createPicture = async (req, res) => {
   try {
     const { originalname, mimetype, path, size } = req.file;
+    console.log(req.file)
     const { userId } = req.body;
 
-    const imageUrl = `${req.protocol}://${req.get("host")}/image/${originalname}`; 
+    const imageUrl = `${req.protocol}://${req.get("host")}/ProfilePicture/${originalname}`;
 
     const resImage = picture.create({
       name: originalname,

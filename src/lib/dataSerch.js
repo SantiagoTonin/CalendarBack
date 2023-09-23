@@ -12,7 +12,7 @@ export const dataUser = async (dataId) => {
     const result = await User.findByPk(dataId, {
       attributes: { exclude: ["password", "checkEmail"] },
       include: [
-        { model: picture },
+        { model: picture, order: [["createdAt", "DESC"]] },
         {
           model: calendar,
           include: [
@@ -21,10 +21,7 @@ export const dataUser = async (dataId) => {
               include: [
                 {
                   model: post,
-                  include: [
-                    { model: tasks },
-                    { model: image },
-                  ],
+                  include: [{ model: tasks }, { model: image }],
                 },
               ],
             },
@@ -39,7 +36,6 @@ export const dataUser = async (dataId) => {
     throw error;
   }
 };
-
 
 export const searchName = async (name) => {
   try {
@@ -99,7 +95,7 @@ export async function searchUsersByEmail(email) {
   try {
     const users = await User.findOne({
       attributes: { exclude: ["password", "checkEmail"] },
-      where: {email: email},
+      where: { email: email },
     });
     return users;
   } catch (error) {
@@ -122,12 +118,14 @@ export const getDataByDate = async (dateSearched) => {
     });
 
     if (!result) {
-      throw new Error('No se encontró ninguna Cell para la fecha proporcionada.');
+      throw new Error(
+        "No se encontró ninguna Cell para la fecha proporcionada."
+      );
     }
 
     return result;
   } catch (error) {
-    console.error('Error al obtener datos:', error);
+    console.error("Error al obtener datos:", error);
     throw error;
   }
 };

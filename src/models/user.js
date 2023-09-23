@@ -47,6 +47,10 @@ export const User = sequelize.define(
     },
     birthdate: {
       type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: { msg: "La fecha no puede ser nulo" },
+      },
     },
     age: {
       type: DataTypes.INTEGER,

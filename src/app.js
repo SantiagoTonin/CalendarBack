@@ -20,7 +20,7 @@ const __dirname = dirname(__filename);
 
 const app = express();
 app.use('/image', express.static('image'));
-app.use('./ProfilePicture',express.static('picture'));
+app.use('/ProfilePicture', express.static( 'ProfilePicture'));
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());

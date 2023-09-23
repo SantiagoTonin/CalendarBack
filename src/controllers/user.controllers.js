@@ -73,6 +73,7 @@ export const singIn = async (req, res) => {
 export const upgrateUser = async (req, res) => {
   try {
     const { name, lastName, email, birthdate, nationality, age } = req.body;
+    console.log(req.body)
     const result = await User.findByPk(req.params.id);
     console.log(result);
 
@@ -98,7 +99,7 @@ export const upgrateUser = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       message: "El usuario no se pudo actualizar",
-      error: error.errors[0].message,
+      error: error.errors ? error.errors[0].message : "Error desconocido",
     });
   }
 };
