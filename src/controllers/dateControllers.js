@@ -10,7 +10,9 @@ import {
   searchLastName,
   searchUsersNameLastName,
   searchUsersByEmail,
-  getDataByDate
+  getDataByDate,
+  getPostsByDates,
+  getPostByCalendarId,
 } from "../lib/dataSerch.js";
 
 import { json, Op, Sequelize } from "sequelize";
@@ -131,8 +133,8 @@ export const getDataUser = async (req, res) => {
     }
 
     if (data.includes("@")) {
-      console.log(data)
-      const result = await searchUsersByEmail(data) || " no data "
+      console.log(data);
+      const result = (await searchUsersByEmail(data)) || " no data ";
       return res.status(200).json({ result: result });
     }
 
@@ -161,8 +163,7 @@ export const getDataUser = async (req, res) => {
 
 export const getDataByCell = async (req, res) => {
   try {
-    const {date}= req.body;
-    console.log("llegue");
+    const { date } = req.body;
     if (!date) {
       res.status(400).json({ message: "La fecha no puede ser null" });
       return;
@@ -170,9 +171,38 @@ export const getDataByCell = async (req, res) => {
 
     const result = await getDataByDate(date);
 
-    res.status(200).json({data: result});
-    
+    res.status(200).json({ data: result });
   } catch (error) {
-    res.status(404).json({ error: error, message: "no se pudo traer los datos" });
+    res
+      .status(404)
+      .json({ error: error, message: "no se pudo traer los datos" });
+  }
+};
+
+export const getDataByArrayDate = async (req, res) => {
+  try {
+    const datesArray = req.body.dates;
+    console.log(datesArray);
+
+    if (!Array.isArray(datesArray) || datesArray.length === 0) {
+      return res.status(400).json({ message: "Formato de datos no válido" });
+    }
+
+    const result = await getPostsByDates(datesArray);
+    res.status(200).json({ InfoDates: result });
+  } catch (error) {
+    console.error("Error al obtener datos:", error);
+    res.status(500).json({ message: "Error al obtener datos" });
+  }
+};
+
+export const dataPostsByCalendarId = async (req, res) => {
+  try {
+    const { calendarId } = req.body;
+    console.log(calendarId)
+    const result = await getPostByCalendarId(calendarId);
+    res.status(200).json({ InfoDates: result });
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener datos" });
   }
 };

@@ -5,7 +5,7 @@ import { cell } from "../models/cells.js";
 import { image } from "../models/imagen.js";
 import { tasks } from "../models/tasks.js";
 import { post } from "../models/post.js";
-import { Op } from "sequelize";
+import { Op,Sequelize  } from "sequelize";
 
 export const dataUser = async (dataId) => {
   try {
@@ -129,3 +129,70 @@ export const getDataByDate = async (dateSearched) => {
     throw error;
   }
 };
+
+
+export async function getPostsByDates(datesArray) {
+  try {
+    const results = await cell.findAll({
+      where: {
+        date: {
+          [Op.in]: datesArray,
+        },
+      },
+      include: [
+        {
+          model: post,
+          order: [['createdAt', 'DESC']], // Ordena por createdAt en orden descendente para obtener el post más reciente
+          include: [
+            {
+              model: tasks,
+            },
+            {
+              model: image,
+            },
+          ],
+        },
+      ],
+    });
+
+    return results;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+
+export async function getPostByCalendarId(calendarId) {
+  try {
+    const result = await calendar.findOne({
+      where: { calendarId: calendarId }, // Supongo que 'calendarId' se refiere al campo 'id' en tu modelo 'calendar'
+      include: [
+        {
+          model: cell,
+          include: [
+            {
+              model: post,
+              order: [["createdAt", "DESC"]],
+              limit: 1, // Limitar a 1 para obtener el post más reciente por celda
+              include: [
+                {
+                  model: tasks,
+                },
+                {
+                  model: image,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
