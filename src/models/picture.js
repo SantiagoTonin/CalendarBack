@@ -1,9 +1,6 @@
 import { sequelize } from "../database/database.js";
 import { DataTypes } from "sequelize";
 
-
-
-
 export const picture = sequelize.define(
   "picture",
   {
@@ -12,16 +9,22 @@ export const picture = sequelize.define(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    name:{
+    name: {
       type: DataTypes.STRING,
     },
-    path:{
+    path: {
       type: DataTypes.STRING,
     },
-    mime:{
-      type:DataTypes.STRING,
+    mime: {
+      type: DataTypes.STRING,
     },
-    imageSize:{
-      type:DataTypes.STRING,
+    imageSize: {
+      type: DataTypes.STRING,
     },
-  })
+  },
+  {
+    defaultScope: {
+      order: [["createdAt", "DESC"]],
+    },
+  }
+);

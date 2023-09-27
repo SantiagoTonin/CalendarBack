@@ -12,7 +12,7 @@ export const dataUser = async (dataId) => {
     const result = await User.findByPk(dataId, {
       attributes: { exclude: ["password", "checkEmail"] },
       include: [
-        { model: picture, order: [["createdAt", "DESC"]] },
+        { model: picture },
         {
           model: calendar,
           include: [
@@ -29,6 +29,10 @@ export const dataUser = async (dataId) => {
         },
       ],
     });
+    if (result.pictures) {
+      result.pictures.sort((a, b) => b.createdAt - a.createdAt);
+    }
+    
 
     return result;
   } catch (error) {
@@ -36,6 +40,7 @@ export const dataUser = async (dataId) => {
     throw error;
   }
 };
+
 
 export const searchName = async (name) => {
   try {

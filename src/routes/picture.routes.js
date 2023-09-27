@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { upload } from "../middleware/picture.middleware.js";
+import { upload,handleUploadError } from "../middleware/picture.middleware.js";
 import { deleteImage } from "../middleware/errorImageDelete.middleware.js";
 import {
   getPictures,
@@ -14,7 +14,7 @@ import { authRoleAuthorized } from "../middleware/roleAuth.middleware.js";
 const route = Router();
 
 route.get("/picture",authRoleAuthorized,getPictures);
-route.post("/picture",upload,deleteImage,checkAuth,createPicture);
+route.post('/picture', upload.single('picture'), handleUploadError,deleteImage,checkAuth, createPicture);
 route.get("/picture/:id",checkAuth,getPicture);
 route.put("/picture/:id",checkAuth,upgratePicture);
 route.delete("/picture/:path",checkAuth,DeletePictures);
