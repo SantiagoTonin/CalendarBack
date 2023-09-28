@@ -133,7 +133,6 @@ export const getDataUser = async (req, res) => {
     }
 
     if (data.includes("@")) {
-      console.log(data);
       const result = (await searchUsersByEmail(data)) || " no data ";
       return res.status(200).json({ result: result });
     }
@@ -199,7 +198,6 @@ export const getDataByArrayDate = async (req, res) => {
 export const dataPostsByCalendarId = async (req, res) => {
   try {
     const { calendarId } = req.body;
-    console.log(calendarId)
     const result = await getPostByCalendarId(calendarId);
     res.status(200).json({ InfoDates: result });
   } catch (error) {

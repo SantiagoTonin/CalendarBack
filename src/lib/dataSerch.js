@@ -125,7 +125,10 @@ export const getDataByDate = async (dateSearched) => {
     if (!result) {
       throw new Error(
         "No se encontró ninguna Cell para la fecha proporcionada."
-      );
+      );}
+
+    if (result.posts && result.posts.length > 0) {
+      result.posts.sort((a, b) => b.updatedAt - a.updatedAt);
     }
 
     return result;
