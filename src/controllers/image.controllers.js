@@ -25,9 +25,13 @@ export const getImage = async (req, res, next) => {
 
 export const createImages = async (req, res, next) => {
   try {
-    console.log(req.file);
+    
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ error: "No se han subido imágenes." });
+    }
+
+    if (req.files && req.files.length > 10) {
+      return res.status(400).json({ error: "Se permite un máximo de 10 imágenes" });
     }
 
     const { postId } = req.body;
