@@ -19,11 +19,13 @@ post.hasMany(tasks, {
     allowNull: false,
   },
   sourceKey: "postId",
+  onDelete: 'CASCADE',
 });
 
 tasks.belongsTo(post, {
   foreignKey: { name: "postId", allowNull: false, validate: { notNull: { msg: "El userId no puede ser null" } } },
   targetKey: "postId",
+  onDelete: 'CASCADE', 
 });
 
 post.hasMany(image, {
@@ -32,9 +34,11 @@ post.hasMany(image, {
     allowNull: false,
   },
   sourceKey: "postId",
+  onDelete: 'CASCADE', 
 });
 
 image.belongsTo(post, {
   foreignKey: { name: "postId", allowNull: false, validate: { notNull: { msg: "El userId no puede ser null" } } },
   targetKey: "postId",
+  onDelete: 'CASCADE',
 });
